@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes'); // Import the signup route
 const loginRoutes = require('./routes/loginRoutes'); // Import the login route
 const courseRoutes = require('./routes/courseRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
+const classRoutes = require('./routes/classRoutes'); 
 const app = express();
 const PORT = 5000;
 
@@ -46,10 +47,11 @@ app.post('/api/signup', async (req, res) => {
 });
 
 // Use the login and signup routes
-app.use('/api', authRoutes); // Make sure authRoutes don't have '/api' prefixed inside them
-app.use('/api', loginRoutes); // Same as above
-app.use('/api', courseRoutes); // Same as above
+app.use('/api', authRoutes);
+app.use('/api', loginRoutes); 
+app.use('/api', courseRoutes); 
 app.use('/api', teacherRoutes); 
+app.use('/api', classRoutes);
 
 // Start the server
 app.listen(PORT, () => {
