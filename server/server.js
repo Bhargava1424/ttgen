@@ -14,7 +14,6 @@ const PORT = 5000;
 mongoose.connect('mongodb://0.0.0.0:27017/ttgen', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -47,10 +46,10 @@ app.post('/api/signup', async (req, res) => {
 });
 
 // Use the login and signup routes
-app.use(authRoutes);
-app.use(loginRoutes);
-app.use(courseRoutes); 
-app.use('/api', teacherRoutes);
+app.use('/api', authRoutes); // Make sure authRoutes don't have '/api' prefixed inside them
+app.use('/api', loginRoutes); // Same as above
+app.use('/api', courseRoutes); // Same as above
+app.use('/api', teacherRoutes); 
 
 // Start the server
 app.listen(PORT, () => {

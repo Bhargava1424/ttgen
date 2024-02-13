@@ -14,7 +14,7 @@ router.get('/teachers', async (req, res) => {
   }
 });
   
-  router.post('/api/teachers', async (req, res) => {
+  router.post('/teachers', async (req, res) => {
     try {
       const newTeacher = new Teacher({
         tid: req.body.tid,

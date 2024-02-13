@@ -1,6 +1,6 @@
 // frontend/src/components/AddTeacher.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import Navbar from './Navbar';
 import axios from 'axios';
 
@@ -9,6 +9,22 @@ const AddTeacher = () => {
     tid: '',
     name: ''
   });
+  
+  const [teachers, setTeachers] = useState([]);
+
+  useEffect(() => {
+    fetchTeachers();
+  }, []);
+
+  const fetchTeachers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/teachers');
+      setTeachers(response.data); // Set the fetched teachers
+    } catch (error) {
+      console.error(error.response ? error.response.data : 'Error fetching teachers');
+    }
+  };
+
 
   const handleChange = (e) => {
     setTeacher({ ...teacher, [e.target.name]: e.target.value });
@@ -25,6 +41,9 @@ const AddTeacher = () => {
       // Handle errors, perhaps show user feedback
     }
   };
+
+  
+
 
   return (
     <div>
@@ -61,6 +80,25 @@ const AddTeacher = () => {
                 </div>
                 </form>
             </div>
+            </div>
+
+            <div className="mt-8 w-full max-w-4xl">
+              <table className="table-auto w-full">
+                <thead>
+                  <tr className="bg-gray-700">
+                    <th className="px-4 py-2">Teacher ID</th>
+                    <th className="px-4 py-2">Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {teachers.map((teacher) => (
+                    <tr key={teacher._id} className="bg-gray-800">
+                      <td className="border px-4 py-2">{teacher.tid}</td>
+                      <td className="border px-4 py-2">{teacher.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
     </div>
     

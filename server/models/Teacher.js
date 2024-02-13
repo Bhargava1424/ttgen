@@ -12,7 +12,7 @@ const teacherSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { collection: 'teacher' });
 
 const Teacher = mongoose.model('Teacher', teacherSchema,'teacher');
 

@@ -15,15 +15,17 @@ const AddCourse = () => {
   const [selectedTeacherNames, setSelectedTeacherNames] = useState('');
 
   useEffect(() => {
-    // Fetch teachers when the component is mounted
-    axios.get('/api/teachers')
-      .then(response => {
-        setTeachers(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching teachers', error);
-      });
+    fetchTeachers();
   }, []);
+
+  const fetchTeachers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/teachers');
+      setTeachers(response.data); // Set the fetched teachers
+    } catch (error) {
+      console.error(error.response ? error.response.data : 'Error fetching teachers');
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
