@@ -5,8 +5,7 @@ const cors = require('cors');
 const User = require('./models/User');
 const authRoutes = require('./routes/authRoutes'); // Import the signup route
 const loginRoutes = require('./routes/loginRoutes'); // Import the login route
-const courseRoutes = require('./routes/courseRoutes');
-const teacherRoutes = require('./routes/teacherRoutes');
+
 const app = express();
 const PORT = 5000;
 
@@ -16,13 +15,6 @@ mongoose.connect('mongodb://0.0.0.0:27017/ttgen', { useNewUrlParser: true, useUn
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-    optionsSuccessStatus: 204,
-  }));
-
 
 // Sign-up endpoint
 app.post('/api/signup', async (req, res) => {
@@ -49,8 +41,6 @@ app.post('/api/signup', async (req, res) => {
 // Use the login and signup routes
 app.use(authRoutes);
 app.use(loginRoutes);
-app.use(courseRoutes); 
-app.use('/api', teacherRoutes);
 
 // Start the server
 app.listen(PORT, () => {

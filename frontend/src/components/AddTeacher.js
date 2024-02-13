@@ -41,7 +41,7 @@ const AddTeacher = () => {
                     name="tid"
                     value={teacher.tid}
                     onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
                     />
                 </div>
                 <div className="mb-6">
@@ -51,7 +51,7 @@ const AddTeacher = () => {
                     name="name"
                     value={teacher.name}
                     onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
                     />
                 </div>
                 <div className="flex items-center justify-between">

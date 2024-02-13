@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import Login from './Login'; // Import the Login component
+
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -10,6 +12,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState('');
   const [mobileError, setMobileError] = useState('');
   const [signupError, setSignupError] = useState('');
+  const [signupSuccess, setSignupSuccess] = useState(false); // New state for signup success
 
   const handleSignUp = async () => {
     try {
@@ -19,9 +22,17 @@ const SignUp = () => {
       }
 
       const apiUrl = 'http://localhost:5000/api/signup';
-      await axios.post(apiUrl, { username, password, mobile });
+      const response = await axios.post(apiUrl, { username, password, mobile });
+
+      // Check if the response has a message
+      if (response.data && response.data.message) {
+        alert(response.data.message);
+      }
       console.log('User registered successfully');
       setSignupError('');
+      setSignupSuccess(true);
+      
+
     } catch (error) {
       console.error('Error registering user:', error);
 
@@ -108,7 +119,24 @@ const SignUp = () => {
       >
         Sign Up
       </button>
+      <div>
+      {!signupSuccess ? (
+        <div className="SignUpContainer p-0 border border-gray-300 rounded-md shadow-md max-w-md mx-auto mt-20">
+          {/* ... (rest of the component code) */}
+          <button
+            onClick={handleSignUp}
+            className="w-full py-0.5 bg-grey-500 text-white rounded-md text-lg cursor-pointer hover:bg-red-600"
+          >
+            Sign Up and Login
+          </button>
+        </div>
+      ) : (
+        <Login /> // Render the Login component when signup is successful
+      )}
     </div>
+      
+    </div>
+    
   );
 };
 

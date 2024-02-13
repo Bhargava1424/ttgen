@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+
+
 
 function Login() {
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState('');
   const [loginMessage, setLoginMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -15,11 +20,13 @@ function Login() {
         alert('All fields are mandatory');
         return;
       }
-      const apiUrl = 'http://localhost:5001/api/login';
-      const response = await axios.post(apiUrl, { username, password });
+      const apiUrl = 'http://localhost:5000/api/login';
+      const response = await axios.post(apiUrl, { username, password }, { timeout: 5000 }); 
 
       if (response.status === 200) {
         setLoginMessage('Login successful');
+        navigate('/main'); 
+
       } else if (response.status === 401) {
         setLoginMessage('Invalid credentials');
       }
