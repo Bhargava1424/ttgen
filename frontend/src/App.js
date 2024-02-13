@@ -9,6 +9,8 @@ import AddTeacher from './components/AddTeacher';   // Import AddTeacher compone
 import AddClass from './components/AddClass';       // Import AddClass component
 import AddCourse from './components/AddCourse';     // Import AddCourse component
 import AddTimeslot from './components/AddTimeslot'; 
+import AddDept from './components/AddDept';
+import AddRoom from './components/AddRoom';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route path="/add-class" element={<AddClass />} />    
           <Route path="/add-course" element={<AddCourse />} />   
           <Route path="/add-timeslot" element={<AddTimeslot />} />
+          <Route path="/add-dept" element={<AddDept />} />
+          <Route path="/add-room" element={<AddRoom />} />
         </Routes>
       </div>
     </Router>

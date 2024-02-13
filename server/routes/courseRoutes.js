@@ -5,7 +5,7 @@ const router = express.Router();
 const Course = require('../models/Course');
 
 // Add a new course
-router.post('/api/courses', async (req, res) => {
+router.post('/courses', async (req, res) => {
   try {
     const course = new Course(req.body);
     await course.save();
@@ -16,7 +16,7 @@ router.post('/api/courses', async (req, res) => {
 });
 
 // Edit a course
-router.put('/api/courses/:id', async (req, res) => {
+router.put('/courses/:id', async (req, res) => {
   try {
     const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!course) {
@@ -29,7 +29,7 @@ router.put('/api/courses/:id', async (req, res) => {
 });
 
 // Delete a course
-router.delete('/api/courses/:id', async (req, res) => {
+router.delete('/courses/:id', async (req, res) => {
   try {
     const course = await Course.findByIdAndDelete(req.params.id);
     if (!course) {

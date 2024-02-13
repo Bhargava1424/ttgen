@@ -3,11 +3,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const User = require('./models/User');
-const authRoutes = require('./routes/authRoutes'); // Import the signup route
-const loginRoutes = require('./routes/loginRoutes'); // Import the login route
+const authRoutes = require('./routes/authRoutes'); 
+const loginRoutes = require('./routes/loginRoutes'); 
 const courseRoutes = require('./routes/courseRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
 const classRoutes = require('./routes/classRoutes'); 
+const timeslotRoutes = require('./routes/timeslotRoutes');
+const deptRoutes = require('./routes/deptRoutes'); 
+const roomRoutes = require('./routes/roomRoutes'); 
+
 const app = express();
 const PORT = 5000;
 
@@ -46,12 +50,18 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
+
 // Use the login and signup routes
 app.use('/api', authRoutes);
 app.use('/api', loginRoutes); 
 app.use('/api', courseRoutes); 
 app.use('/api', teacherRoutes); 
 app.use('/api', classRoutes);
+app.use('/api', timeslotRoutes);
+app.use('/api', deptRoutes);
+app.use('/api', roomRoutes);
+
+
 
 // Start the server
 app.listen(PORT, () => {

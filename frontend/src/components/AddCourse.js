@@ -2,65 +2,71 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
 
-const AddCourse = () => {
+const AddCourse = () => {const [course, setCourse] = useState({
+  cid: '',
+  name: '',
+  teachers: [],
+  credits: '',
+});
 
-  const [course, setCourse] = useState({
-    cid: '',
-    name: '',
-    teachers: [],
-    credits: '',
-  });
+const [teachers, setTeachers] = useState([]);
+const [selectedTeacherNames, setSelectedTeacherNames] = useState('');
+const [message, setMessage] = useState({ text: '', type: '' }); // New state for managing feedback messages
 
-  const [teachers, setTeachers] = useState([]);
-  const [selectedTeacherNames, setSelectedTeacherNames] = useState('');
+useEffect(() => {
+  fetchTeachers();
+}, []);
 
-  useEffect(() => {
-    fetchTeachers();
-  }, []);
+const fetchTeachers = async () => {
+  try {
+    const response = await axios.get('http://localhost:5000/api/teachers');
+    setTeachers(response.data);
+  } catch (error) {
+    console.error(error.response ? error.response.data : 'Error fetching teachers');
+  }
+};
 
-  const fetchTeachers = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/teachers');
-      setTeachers(response.data); // Set the fetched teachers
-    } catch (error) {
-      console.error(error.response ? error.response.data : 'Error fetching teachers');
-    }
-  };
+const handleChange = (event) => {
+  const { name, value } = event.target;
+  if (name === 'teachers') {
+    const selectedOptions = Array.from(event.target.selectedOptions, option => option.value);
+    setCourse({ ...course, teachers: selectedOptions });
+    const selectedNames = selectedOptions.map(id => teachers.find(teacher => teacher._id === id).name).join(', ');
+    setSelectedTeacherNames(selectedNames);
+  } else {
+    setCourse({ ...course, [name]: value });
+  }
+};
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    if (name === 'teachers') {
-      const selectedOptions = Array.from(event.target.selectedOptions, option => option.value);
-      setCourse({ ...course, teachers: selectedOptions });
-      const selectedNames = selectedOptions.map(id => 
-        teachers.find(teacher => teacher._id === id).name
-      ).join(', ');
-      setSelectedTeacherNames(selectedNames);
-    } else {
-      setCourse({ ...course, [name]: value });
-    }
-  };
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  try {
+    const response = await axios.post('http://localhost:5000/api/courses', course);
+    console.log(response.data);
+    setCourse({ cid: '', name: '', teachers: [], credits: '' });
+    setSelectedTeacherNames('');
+    setMessage({ text: 'Course added successfully!', type: 'success' }); // Set success message
+  } catch (error) {
+    console.error('Error adding course', error);
+    setMessage({ text: 'Error adding course.', type: 'error' }); // Set error message
+  }
+};
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Post to your API to save the course
-    axios.post('/api/courses', course)
-      .then(response => {
-        // Handle the response from the server
-        console.log(response.data);
-        setCourse({ cid: '', name: '', teachers: [], credits: '' });
-        setSelectedTeacherNames('');
-      })
-      .catch(error => {
-        console.error('Error adding course', error);
-      });
-  };
   
 
   return (
     <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center pt-10">
       <Navbar/>
       <h2 className="text-3xl font-bold mb-4">Add Course</h2>
+
+      {message.text && (
+        <div
+          role="alert"
+          className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-error'} mb-4`}
+        >
+          {message.text}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="w-full max-w-lg">
         <div className="mb-4">
           <label htmlFor="cid" className="block text-sm font-medium mb-1">Course Number:</label>
