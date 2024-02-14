@@ -5,7 +5,7 @@ const User = require('../models/User'); // Import the User model
 // const bcrypt = require('bcrypt');
 
 // Login endpoint
-router.post('/api/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 

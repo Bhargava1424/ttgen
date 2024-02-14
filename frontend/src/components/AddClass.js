@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar'; // Assuming Navbar is a shared component
 
@@ -10,12 +10,26 @@ const AddClass = () => {
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
+  const [classes, setClasses] = useState([]);
 
 
   const handleChange = (e) => {
     setClassData({ ...classData, [e.target.name]: e.target.value });
     if (showSuccess) {
       setShowSuccess(false); // Hide the success message when user starts editing the form again
+    }
+  };
+
+  useEffect(() => {
+    fetchClasses(); // Fetch classes when the component mounts
+  }, []);
+
+  const fetchClasses = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/classes');
+      setClasses(response.data); // Store fetched classes
+    } catch (error) {
+      console.error('Error fetching classes', error);
     }
   };
 
@@ -27,6 +41,7 @@ const AddClass = () => {
       // Optionally, clear the form or give user feedback
       setClassData({ classId: '', className: '' }); // Reset form
       setShowSuccess(true);
+      fetchClasses();
     } catch (error) {
       console.error(error.response ? error.response.data : 'Error adding class');
       // Handle errors, perhaps show user feedback
@@ -66,6 +81,28 @@ const AddClass = () => {
             </div>
           </form>
         </div>
+        <table className="table-auto w-full">
+            <thead>
+              <tr className="bg-gray-700">
+                <th className="px-4 py-2 text-white">Class ID</th>
+                <th className="px-4 py-2 text-white">Class Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {classes.map((cls, index) => (
+                <tr key={index} className="bg-gray-800">
+                  <td className="border px-4 py-2 text-white">{cls.classId}</td>
+                  <td className="border px-4 py-2 text-white">{cls.className}</td>
+                </tr>
+              ))}
+              {classes.length === 0 && (
+                <tr>
+                  <td colSpan="2" className="px-4 py-2 text-white text-center">No classes found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+
       </div>
     </div>
   );

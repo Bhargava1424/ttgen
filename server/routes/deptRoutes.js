@@ -14,6 +14,15 @@ router.post('/depts', async (req, res) => {
   }
 });
 
+router.get('/depts', async (req, res) => {
+  try {
+    const depts = await Dept.find({});
+    res.json(depts);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching departments", error: error.message });
+  }
+});
+
 // Optionally, add endpoints to get/update/delete departments as needed
 
 module.exports = router;

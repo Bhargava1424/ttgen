@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 const AddCourse = () => {const [course, setCourse] = useState({
   cid: '',
   name: '',
-  teachers: [],
+  teacherNames: [],
   credits: '',
 });
 
@@ -21,36 +21,84 @@ const fetchTeachers = async () => {
   try {
     const response = await axios.get('http://localhost:5000/api/teachers');
     setTeachers(response.data);
+    console.log(teachers)
   } catch (error) {
     console.error(error.response ? error.response.data : 'Error fetching teachers');
   }
 };
+const [courses, setCourses] = useState([]); // New state for storing courses
+
+useEffect(() => {
+  
+  fetchCourses(); // Fetch courses when the component mounts
+}, []);
+
+const fetchCourses = async () => {
+  try {
+    const response = await axios.get('http://localhost:5000/api/courses');
+    setCourses(response.data);
+  } catch (error) {
+    console.error('Error fetching courses', error);
+  }
+};
+
+
+// const handleChange = (event) => {
+//   const { name, value, options } = event.target;
+
+//   if (name === 'teachers') {
+//     let selectedOptions = Array.from(options).filter(option => option.selected).map(option => option.value);
+//     let selectedNames = selectedOptions.map(id => teachers.find(teacher => teacher._id === id).name);
+//     console.log(selectedNames)
+    
+//     setCourse({ ...course, teacherNames: selectedNames }); 
+//     setSelectedTeacherNames(selectedNames.join(', '));  
+//   } else {
+//     setCourse({ ...course, [name]: value });
+//   }
+// };
 
 const handleChange = (event) => {
-  const { name, value } = event.target;
+  const { name, value, options } = event.target;
+
   if (name === 'teachers') {
-    const selectedOptions = Array.from(event.target.selectedOptions, option => option.value);
-    setCourse({ ...course, teachers: selectedOptions });
-    const selectedNames = selectedOptions.map(id => teachers.find(teacher => teacher._id === id).name).join(', ');
-    setSelectedTeacherNames(selectedNames);
+    // Extracting the selected options
+    let selectedOptions = Array.from(options).filter(option => option.selected).map(option => option.value);
+
+    // Assuming teachers.find(...).name correctly returns a string, this will be a flat array of strings
+    let selectedNames = selectedOptions.map(id => teachers.find(teacher => teacher._id === id).name);
+
+    // Directly set the flat array of teacher names
+    setCourse({ ...course, teacherNames: selectedNames }); // Ensure this is a flat array
+    setSelectedTeacherNames(selectedNames.join(', '));
   } else {
     setCourse({ ...course, [name]: value });
   }
 };
 
+
+
+
 const handleSubmit = async (event) => {
   event.preventDefault();
+  // Create a new object excluding the teachers ID array if you don't need it
+  let submissionData = {
+    ...course,
+    teachers: course.teacherNames, // Replace or keep both as needed
+  };
+  console.log(submissionData)
   try {
-    const response = await axios.post('http://localhost:5000/api/courses', course);
+    const response = await axios.post('http://localhost:5000/api/courses', submissionData);
     console.log(response.data);
-    setCourse({ cid: '', name: '', teachers: [], credits: '' });
+    setCourse({ cid: '', name: '', teachers: [], teacherNames: [], credits: '' });
     setSelectedTeacherNames('');
-    setMessage({ text: 'Course added successfully!', type: 'success' }); // Set success message
+    setMessage({ text: 'Course added successfully!', type: 'success' });
   } catch (error) {
     console.error('Error adding course', error);
-    setMessage({ text: 'Error adding course.', type: 'error' }); // Set error message
+    setMessage({ text: 'Error adding course.', type: 'error' });
   }
 };
+
 
   
 
@@ -115,11 +163,12 @@ const handleSubmit = async (event) => {
           <input
             type="text"
             name="selectedTeachers"
-            value={selectedTeacherNames}
+            value={selectedTeacherNames} // This should reflect the state updated in handleChange
             readOnly
             className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-700 text-gray-300 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
+
 
         <div className="mb-6">
           <label htmlFor="credits" className="block text-sm font-medium mb-1">Credits:</label>
@@ -136,6 +185,34 @@ const handleSubmit = async (event) => {
           Submit
         </button>
       </form>
+      <table className="table-auto w-full">
+            <thead>
+              <tr className="bg-gray-700">
+                <th className="px-4 py-2 text-white">Course ID</th>
+                <th className="px-4 py-2 text-white">Course Name</th>
+                <th className="px-4 py-2 text-white">Teachers</th>
+                <th className="px-4 py-2 text-white">Credits</th>
+              </tr>
+            </thead>
+            <tbody>
+              {courses.map((course) => (
+                <tr key={course._id} className="bg-gray-800">
+                  <td className="border px-4 py-2 text-white">{course.cid}</td>
+                  <td className="border px-4 py-2 text-white">{course.name}</td>
+                  <td className="border px-4 py-2 text-white">
+                    {/* Flatten the array of arrays and join names with a comma */}
+                    {course.teachers.flat().join(', ')}
+                  </td>
+                  <td className="border px-4 py-2 text-white">{course.credits}</td>
+                </tr>
+              ))}
+              {courses.length === 0 && (
+                <tr>
+                  <td colSpan="4" className="px-4 py-2 text-white text-center">No courses found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
     </div>
   );
 };

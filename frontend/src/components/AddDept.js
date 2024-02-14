@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
 
@@ -9,6 +9,21 @@ const AddDept = () => {
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
+  const [depts, setDepts] = useState([]); 
+
+  useEffect(() => {
+    fetchDepts();
+  }, []);
+
+  const fetchDepts = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/depts');
+      setDepts(response.data);
+    } catch (error) {
+      console.error('Error fetching departments', error);
+    }
+  };
+
 
   const handleChange = (e) => {
     setDept({ ...dept, [e.target.name]: e.target.value });
@@ -51,6 +66,22 @@ const AddDept = () => {
             </button>
           </form>
         </div>
+        <table className="table-auto w-full text-white">
+          <thead>
+            <tr className="bg-gray-700">
+              <th className="px-4 py-2">Department ID</th>
+              <th className="px-4 py-2">Department Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {depts.map((dept) => (
+              <tr key={dept._id} className="bg-gray-800">
+                <td className="border px-4 py-2">{dept.deptId}</td>
+                <td className="border px-4 py-2">{dept.deptName}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

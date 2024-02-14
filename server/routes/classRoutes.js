@@ -14,6 +14,17 @@ router.post('/classes', async (req, res) => {
   }
 });
 
+router.get('/classes', async (req, res) => {
+  try {
+    const allClasses = await Class.find({});
+    res.json(allClasses);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
 
 
 // Optionally, add more routes as needed

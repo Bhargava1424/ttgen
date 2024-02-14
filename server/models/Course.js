@@ -13,7 +13,7 @@ const courseSchema = new mongoose.Schema({
     required: true
   },
   teachers: [{
-    type: mongoose.Schema.Types.Array,
+    type: Array,
     ref: 'Teacher'
   }],
   credits: {

@@ -14,6 +14,15 @@ router.post('/timeslots', async (req, res) => {
   }
 });
 
+router.get('/timeslots', async (req, res) => {
+  try {
+    const timeslots = await Timeslot.find({});
+    res.json(timeslots);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching timeslots", error: error.message });
+  }
+});
+
 // Optionally, add endpoints to get/update/delete timeslots as needed
 
 module.exports = router;
