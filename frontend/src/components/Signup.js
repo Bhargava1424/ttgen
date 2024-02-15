@@ -115,7 +115,7 @@ const SignUp = () => {
       {signupError && <p className="text-red-500 text-sm mt-1">{signupError}</p>}
       <button
         onClick={handleSignUp}
-        className="w-full py-2 bg-blue-500 text-white rounded-md text-lg cursor-pointer hover:bg-blue-600"
+        className="w-full py-2 bg-blue-500 text-white rounded-md text-lg cursor-pointer hover:bg-green-600"
       >
         Sign Up
       </button>

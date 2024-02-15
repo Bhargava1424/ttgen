@@ -23,7 +23,7 @@ const Navbar = () => {
     </div>
   </div>
   <div className="navbar-center">
-    <a className="btn btn-ghost text-xl" href='Main.js'>Time Table Manager</a>
+    <p className="btn btn-ghost text-xl"><Link to='/main'>Time Table Manager</Link></p>
   </div>
   <div className="navbar-end ">
     <button className="btn btn-ghost btn-circle">
